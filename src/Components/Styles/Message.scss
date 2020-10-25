@@ -1,0 +1,14 @@
+.message {
+   @include flexbox;
+   color: white;
+   padding: 20px;
+
+   &__info {
+      margin-left: 20px;
+      > h4 span {
+         font-size: x-small;
+         color: gray;
+         margin-left: 20px;
+      }
+   }
+}

@@ -1,0 +1,13 @@
+@import './mixin.scss';
+
+// ------------------- Components ------------------------//
+@import './Components/Styles/Login.scss';
+@import './Components/Styles/Sidebar.scss';
+@import './Components/Styles/Channel.scss';
+@import './Components/Styles/Chat.scss';
+@import './Components/Styles/ChatHeader.scss';
+@import './Components/Styles/Message.scss';
+// ------------------- App ------------------------//
+.app {
+   display: flex;
+}

@@ -1,0 +1,48 @@
+.chatHeader {
+   @include flexbox($jcontent: space-between);
+   align-items: center;
+   color: gray;
+   border-bottom: 3px solid #26282c;
+   padding: 10px;
+
+   &__left {
+      > h3 {
+         display: flex;
+         align-items: center;
+         color: white;
+         > span {
+            color: gray;
+            padding: 0 10px;
+         }
+      }
+   }
+
+   &__right {
+      @include flexbox($jcontent: space-between);
+      align-items: center;
+      flex: 0.5;
+
+      > .MuiSvgIcon-root {
+         cursor: pointer;
+         padding: 0 5px;
+         &:hover {
+            color: rgb(161, 157, 157);
+         }
+      }
+   }
+
+   &__search {
+      @include flexbox;
+      align-items: center;
+      color: gray;
+      background-color: #2f3135;
+      border-radius: 3px;
+      padding: 0 5px;
+      > input {
+         background: transparent;
+         outline-width: 0;
+         color: white;
+         border: none;
+      }
+   }
+}

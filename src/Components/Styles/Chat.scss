@@ -1,0 +1,40 @@
+.chat {
+   @include flexbox($dir: column);
+   flex: 0.75;
+   height: 100vh;
+   background-color: #363a3f;
+
+   &__message {
+      flex: 1;
+   }
+
+   &__input {
+      @include flexbox($jcontent: space-between);
+      align-items: center;
+      color: lightgray;
+      background-color: #474b53;
+      border-radius: 5px;
+      padding: 0 10px;
+      margin: 20px;
+
+      > form {
+         flex: 1;
+         > input {
+            width: 100%;
+            background: transparent;
+            color: white;
+            font-size: large;
+            border: none;
+            outline-width: 0;
+            padding: 15px;
+         }
+         > button {
+            display: none;
+         }
+      }
+
+      .MuiSvgIcon-root {
+         padding: 5px;
+      }
+   }
+}
