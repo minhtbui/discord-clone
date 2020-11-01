@@ -8,10 +8,16 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectChannelId, selectChannelName } from '../features/appSlice';
 import { selectUser } from '../features/userSlice';
-import db from '../firebase';
 import ChatHeader from './ChatHeader';
 import Message from './Message';
-import firebase from 'firebase';
+// import firebase from 'firebase';
+// import db from '../firebase';
+import axios from '../axios';
+import Pusher from 'pusher-js';
+
+const pusher = new Pusher('06c264784f19415e2712', {
+   cluster: 'ap1',
+});
 
 function Chat() {
    const user = useSelector(selectUser);
@@ -20,25 +26,39 @@ function Chat() {
    const [input, setInput] = useState('');
    const [messages, setMessages] = useState([]);
 
-   useEffect(() => {
+   const getConversation = (channelId) => {
       if (channelId) {
-         db.collection('channels')
-            .doc(channelId)
-            .collection('messages')
-            .orderBy('timestamp', 'asc')
-            .onSnapshot((snapshot) =>
-               setMessages(snapshot.docs.map((doc) => doc.data())),
-            );
+         axios.get(`/get/conversation?id=${channelId}`).then((res) => {
+            setMessages(res.data[0].conversation);
+         });
       }
+   };
+
+   useEffect(() => {
+      // if (channelId) {
+      //    db.collection('channels')
+      //       .doc(channelId)
+      //       .collection('messages')
+      //       .orderBy('timestamp', 'asc')
+      //       .onSnapshot((snapshot) =>
+      //          setMessages(snapshot.docs.map((doc) => doc.data())),
+      //       );
+      // }
+      getConversation(channelId);
+
+      const channel = pusher.subscribe('conversation');
+      channel.bind('newMessage', function (data) {
+         getConversation(channelId);
+      });
    }, [channelId]);
 
    const sendMessage = (e) => {
       e.preventDefault();
 
-      db.collection('channels').doc(channelId).collection('messages').add({
-         user: user,
-         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      axios.post(`/new/message?id=${channelId}`, {
          message: input,
+         timestamp: Date.now(),
+         user: user,
       });
       setInput('');
    };

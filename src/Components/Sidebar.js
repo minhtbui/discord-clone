@@ -10,19 +10,37 @@ import { HeadsetMic, Mic, Settings } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice';
 import db, { auth } from '../firebase';
+import axios from '../axios';
+import Pusher from 'pusher-js';
+
+const pusher = new Pusher('06c264784f19415e2712', {
+   cluster: 'ap1',
+});
 
 function Sidebar() {
    const user = useSelector(selectUser);
    const [channels, setChannels] = useState([]);
 
+   const getChannels = () => {
+      axios.get('/get/channelList').then((res) => {
+         setChannels(res.data);
+      });
+   };
+
    useEffect(() => {
-      db.collection('channels').onSnapshot((snapshot) => {
-         setChannels(
-            snapshot.docs.map((doc) => ({
-               id: doc.id,
-               channel: doc.data(),
-            })),
-         );
+      // db.collection('channels').onSnapshot((snapshot) => {
+      //    setChannels(
+      //       snapshot.docs.map((doc) => ({
+      //          id: doc.id,
+      //          channel: doc.data(),
+      //       })),
+      //    );
+      // });
+      getChannels();
+
+      const channel = pusher.subscribe('channels');
+      channel.bind('newChannel', function (data) {
+         getChannels();
       });
    }, []);
 
@@ -30,7 +48,7 @@ function Sidebar() {
       const channelName = prompt('Enter a channel name:');
 
       if (channelName) {
-         db.collection('channels').add({
+         axios.post('/new/channel', {
             channelName: channelName,
          });
       }
@@ -55,8 +73,8 @@ function Sidebar() {
                />
             </div>
             <div className='sidebar__channelsList'>
-               {channels.map(({ id, channel }) => (
-                  <Channel key={id} id={id} channelName={channel.channelName} />
+               {channels.map(({ id, name }) => (
+                  <Channel key={id} id={id} channelName={name} />
                ))}
             </div>
          </div>

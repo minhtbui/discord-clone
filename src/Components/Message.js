@@ -8,7 +8,7 @@ function Message({ user, timestamp, message }) {
          <div className='message__info'>
             <h4>
                {user.displayName}
-               <span>{new Date(timestamp?.toDate()).toLocaleString()}</span>
+               <span>{new Date(parseInt(timestamp)).toLocaleString()}</span>
             </h4>
             <p>{message}</p>
          </div>
